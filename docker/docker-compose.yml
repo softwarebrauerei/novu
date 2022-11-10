@@ -14,7 +14,7 @@ services:
       - PUID=1000
       - PGID=1000
     volumes:
-      - mongodb:/data/db
+      - /data/mongodb:/data/db
     ports:
       - 27017:27017
     restart: unless-stopped
@@ -25,8 +25,6 @@ services:
     ports:
       - "443:433"
       - "80:80"
-    networks:
-      - penjaniweb
     volumes:
       - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
 
@@ -106,5 +104,3 @@ services:
       WIDGET_URL: ${WIDGET_URL}
     ports:
       - 4701:4701
-volumes:
-  mongodb: ~
