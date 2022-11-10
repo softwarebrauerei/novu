@@ -18,8 +18,20 @@ services:
     ports:
       - 27017:27017
     restart: unless-stopped
+
+  reverseproxy:
+    image: nginx:latest
+    restart: always
+    ports:
+      - "443:433"
+      - "80:80"
+    networks:
+      - penjaniweb
+    volumes:
+      - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+
   api:
-    image: "ghcr.io/novuhq/novu/api:0.9.0"
+    image: "ghcr.io/novuhq/novu/api:latest"
     depends_on:
       - mongodb
       - redis
@@ -47,7 +59,7 @@ services:
     ports:
       - "3000:3000"
   ws:
-    image: "ghcr.io/novuhq/novu/ws:0.9.0"
+    image: "ghcr.io/novuhq/novu/ws:latest"
     depends_on:
       - mongodb
       - redis
@@ -62,7 +74,7 @@ services:
     ports:
       - "3002:3002"
   web:
-    image: "ghcr.io/novuhq/novu/web:0.9.0"
+    image: "ghcr.io/novuhq/novu/web:latest"
     depends_on:
       - api
     container_name: web
@@ -74,7 +86,7 @@ services:
     ports:
       - 4200:4200
   widget:
-    image: "ghcr.io/novuhq/novu/widget:0.9.0"
+    image: "ghcr.io/novuhq/novu/widget:latest"
     depends_on:
       - api
       - web
@@ -88,7 +100,7 @@ services:
   embed:
     depends_on:
       - widget
-    image: "ghcr.io/novuhq/novu/embed:0.9.0"
+    image: "ghcr.io/novuhq/novu/embed:latest"
     container_name: embed
     environment:
       WIDGET_URL: ${WIDGET_URL}
