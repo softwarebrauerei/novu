@@ -19,7 +19,7 @@ services:
       - 27017:27017
     restart: unless-stopped
 
-  reverseproxy:
+  proxy:
     image: nginx:latest
     restart: always
     ports:
@@ -83,6 +83,14 @@ services:
       REACT_APP_DOCKER_HOSTED_ENV: 'true'
     ports:
       - 4200:4200
+    healthcheck:
+      test: "curl -f http://localhost:4200 || exit 1"
+      interval: 3m
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    restart: always
+
   widget:
     image: "ghcr.io/novuhq/novu/widget:latest"
     depends_on:
